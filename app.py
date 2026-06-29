@@ -4,9 +4,16 @@ from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 from opentelemetry.semconv.trace import SpanAttributes
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.semconv.resource import ResourceAttributes
 
-# Set up OpenTelemetry tracing and initialize the tracer provider
-tracer_provider = TracerProvider()
+# Set up OpenTelemetry resource attributes for the service
+resource = Resource.create({
+	ResourceAttributes.SERVICE_NAME: "demo-service",
+	ResourceAttributes.SERVICE_VERSION: "0.1.0"
+})
+# Set up OpenTelemetry tracing and initialize the tracer provider with the resource attributes
+tracer_provider = TracerProvider(resource=resource)
 
 # Add a BatchSpanProcessor to the tracer provider, which will export spans to the console using the ConsoleSpanExporter
 processor = BatchSpanProcessor(ConsoleSpanExporter())
