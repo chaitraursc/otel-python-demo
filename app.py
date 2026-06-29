@@ -2,7 +2,8 @@ from math import factorial
 from flask import Flask, request
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.semconv.trace import SpanAttributes
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.semconv.resource import ResourceAttributes
@@ -10,13 +11,13 @@ from opentelemetry.semconv.resource import ResourceAttributes
 # Set up OpenTelemetry resource attributes for the service
 resource = Resource.create({
 	ResourceAttributes.SERVICE_NAME: "demo-service",
-	ResourceAttributes.SERVICE_VERSION: "0.1.0"
+	ResourceAttributes.SERVICE_VERSION: "0.2.0"
 })
 # Set up OpenTelemetry tracing and initialize the tracer provider with the resource attributes
 tracer_provider = TracerProvider(resource=resource)
 
-# Add a BatchSpanProcessor to the tracer provider, which will export spans to the console using the ConsoleSpanExporter
-processor = BatchSpanProcessor(ConsoleSpanExporter())
+# Add a BatchSpanProcessor to the tracer provider, which will export spans to the OTLP exporter
+processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://localhost:4317"))
 
 # Add the processor to the tracer provider
 tracer_provider.add_span_processor(processor)
