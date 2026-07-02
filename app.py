@@ -11,7 +11,7 @@ from opentelemetry.semconv.resource import ResourceAttributes
 # Set up OpenTelemetry resource attributes for the service
 resource = Resource.create({
 	ResourceAttributes.SERVICE_NAME: "demo-service",
-	ResourceAttributes.SERVICE_VERSION: "0.2.0"
+	ResourceAttributes.SERVICE_VERSION: "0.2.1"
 })
 # Set up OpenTelemetry tracing and initialize the tracer provider with the resource attributes
 tracer_provider = TracerProvider(resource=resource)
